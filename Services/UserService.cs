@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.EntityFrameworkCore;
 using SpaAngular.Data;
 using SpaAngular.Models;
 
@@ -16,7 +17,7 @@ public class UserService {
     /*
     * this function is very draft. Rectify this!
     */
-    public void PersistUserWhenNotExists(OAuthCreatingTicketContext context) {
+    public async Task PersistUserWhenNotExists(OAuthCreatingTicketContext context) {
         var userId = context.Identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) {
             throw new Exception("userId not found");
@@ -25,7 +26,7 @@ public class UserService {
         var claim = new Claim(ClaimTypes.Role, value: "User");
         context.Identity?.AddClaim(claim);
 
-        var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == userId);
+        var user = await _applicationDbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
         if (user == null) {
             var newUser = new User{
                 Id = context.Identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value,
@@ -34,8 +35,8 @@ public class UserService {
                 Picture = context.Identity?.Claims.FirstOrDefault(x => x.Type == "urn:google:picture")?.Value,
                 Role = context.Identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value,
             };
-            _applicationDbContext.Users.Add(newUser);
-            _applicationDbContext.SaveChangesAsync();
+            await _applicationDbContext.Users.AddAsync(newUser);
+            await _applicationDbContext.SaveChangesAsync();
         }
     }
 }

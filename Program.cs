@@ -36,10 +36,9 @@ builder.Services.AddAuthentication(options => {
 
     //custom claims
     options.Events = new OAuthEvents{
-        OnCreatingTicket = ctx => {
+        OnCreatingTicket = async ctx => {
             var userService = ctx.HttpContext.RequestServices.GetRequiredService<UserService>();
-            userService.PersistUserWhenNotExists(ctx);
-            return Task.CompletedTask;
+            await userService.PersistUserWhenNotExists(ctx);
         }
     };
 });
