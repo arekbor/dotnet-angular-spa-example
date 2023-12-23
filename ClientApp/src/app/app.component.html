@@ -1,0 +1,12 @@
+<button (click)="login()" *ngIf="!isAuthenticated">LOGIN</button>
+
+<button (click)="logout()" *ngIf="isAuthenticated">LOGOUT</button>
+
+<ng-container *ngIf="isAuthenticated">
+  <img [src]="userDto?.picture" alt="picture" />
+  <div>{{ userDto?.email }}</div>
+  <div>{{ userDto?.name }}</div>
+  <div>{{ userDto?.role }}</div>
+</ng-container>
+
+<router-outlet />
