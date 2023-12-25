@@ -1,29 +1,49 @@
-# Stage 1: Build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
-WORKDIR /App
+# # Etap budowania (build stage) dla aplikacji .NET
+# FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+# WORKDIR /app
+# COPY . ./
 
-# Copy everything
+# RUN dotnet restore "SpaAngular.csproj"
+# RUN dotnet publish "SpaAngular.csproj" -c Release -o out
+
+# # Etap budowania (build stage) dla aplikacji Angular
+# FROM node:latest as node
+# WORKDIR /app/ClientApp
+# COPY --from=build-env /app/ClientApp .
+# RUN npm install
+# RUN npm run build --prod
+
+# # Etap uruchomieniowy (runtime stage)
+# FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# EXPOSE 80
+# WORKDIR /app
+
+# COPY docker-entrypoint.sh .
+# RUN chmod +x docker-entrypoint.sh
+
+# # Kopiowanie plików wynikowych z etapu budowania .NET
+# COPY --from=build-env /app/out .
+
+# ENV ASPNETCORE_ENVIRONMENT=Production
+# ENTRYPOINT ["./docker-entrypoint.sh"]
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+RUN apt-get update -yq && apt-get install -yq curl
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get update && \
+    apt-get install -yq nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY *.csproj ./
+RUN dotnet restore "SpaAngular.csproj"
+
 COPY . ./
-# Restore as distinct layers
-RUN dotnet restore
-# Build and publish a release
-RUN dotnet publish -c Release -o out
+RUN dotnet publish "SpaAngular.csproj" -c Release -o /out
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+EXPOSE 80
+WORKDIR /app
+COPY --from=build /out .
+ENV ASPNETCORE_ENVIRONMENT=Production
 
-# Install Node.js and npm
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs
-
-# Set the working directory for the client app
-WORKDIR /App/ClientApp
-
-# Install npm dependencies and build the client app
-RUN npm install
-RUN npm run build
-
-# Stage 2: Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /App
-COPY --from=build-env /App/out .
-ENTRYPOINT ["dotnet", "SpaAngular.dll"]
+ENTRYPOINT [ "dotnet", "SpaAngular.dll" ]

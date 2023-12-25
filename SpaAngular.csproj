@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <SpaRoot>ClientApp\</SpaRoot>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,5 +16,29 @@
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
   </ItemGroup>
+
+  <Target Name="NpmInstall" BeforeTargets="Build" Condition="!Exists('$(SpaRoot)node_modules')">
+    <Exec WorkingDirectory="$(SpaRoot)" Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+  </Target>
+
+  <Target Name="RunClientApp" BeforeTargets="Build" DependsOnTargets="NpmInstall">
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build --prod" IgnoreStandardErrorWarningFormat="true" Condition="'$(Configuration)'=='Release'" />
+  </Target>
+
+  <Target Name="PublishClientApp" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)dist\client-app\**;" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
 
 </Project>

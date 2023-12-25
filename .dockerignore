@@ -1,0 +1,9 @@
+.dockerignore
+.git
+.gitignore
+bin
+obj
+ClientApp/.vscode
+ClientApp/node_modules
+ClientApp/.gitignore
+ClientApp/README.md

@@ -34,11 +34,11 @@ builder.Services.AddAuthentication(options => {
     //maps claims from google oauth
     options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
 
-    //custom claims
     options.Events = new OAuthEvents{
         OnCreatingTicket = async ctx => {
             var userService = ctx.HttpContext.RequestServices.GetRequiredService<UserService>();
-            await userService.PersistUserWhenNotExists(ctx);
+            await userService.PersistUserWhenNotExistsAsync(ctx);
+            await userService.LoadUserFromStoreAsync(ctx);
         }
     };
 });
