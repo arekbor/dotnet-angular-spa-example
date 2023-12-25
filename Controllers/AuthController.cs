@@ -1,8 +1,6 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SpaAngular.Services;
 
 namespace SpaAngular.Controllers;
 
@@ -10,12 +8,6 @@ namespace SpaAngular.Controllers;
 [Route("api/oauth2")]
 [ApiController]
 public class AuthController : ControllerBase {
-
-    private UserService _userService;
-    public AuthController(UserService userService)
-    {
-        _userService = userService;
-    }
 
     [AllowAnonymous]
     [HttpGet("authorize/google")]

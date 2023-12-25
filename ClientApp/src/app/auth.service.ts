@@ -2,11 +2,11 @@ import { Location } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, map, tap } from "rxjs";
-import { UserDto } from "./userDto.model";
+import { Account } from "./account.model";
 
 @Injectable()
 export class AuthService {
-  private accountState$ = new Subject<UserDto | null>();
+  private accountState$ = new Subject<Account | null>();
   constructor(private httpClient: HttpClient, private location: Location) {}
 
   login() {
@@ -23,7 +23,7 @@ export class AuthService {
   identity(): void {
     this.fetch()
       .pipe(
-        tap((userDto: UserDto) => {
+        tap((userDto: Account) => {
           this.authenticate(userDto);
         })
       )
@@ -34,15 +34,15 @@ export class AuthService {
     return this.accountState$.pipe(map((userDto) => !!userDto));
   }
 
-  getAccountState(): Observable<UserDto | null> {
+  getAccountState(): Observable<Account | null> {
     return this.accountState$;
   }
 
-  private authenticate(identity: UserDto | null) {
+  private authenticate(identity: Account | null) {
     this.accountState$.next(identity);
   }
 
-  private fetch(): Observable<UserDto> {
-    return this.httpClient.get<UserDto>("api/account");
+  private fetch(): Observable<Account> {
+    return this.httpClient.get<Account>("api/account");
   }
 }

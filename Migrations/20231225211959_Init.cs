@@ -15,9 +15,6 @@ namespace SpaAngular.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    Picture = table.Column<string>(type: "text", nullable: true),
                     Role = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>

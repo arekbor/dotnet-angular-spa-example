@@ -11,8 +11,8 @@ using SpaAngular.Data;
 namespace SpaAngular.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231225122605_update-user")]
-    partial class updateuser
+    [Migration("20231225211959_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

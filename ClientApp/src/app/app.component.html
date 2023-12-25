@@ -1,12 +1,13 @@
-<button (click)="login()" *ngIf="!isAuthenticated">LOGIN</button>
-
-<button (click)="logout()" *ngIf="isAuthenticated">LOGOUT</button>
-
-<ng-container *ngIf="isAuthenticated">
-  <img [src]="userDto?.picture" alt="picture" />
-  <div>{{ userDto?.email }}</div>
-  <div>{{ userDto?.name }}</div>
-  <div>{{ userDto?.role }}</div>
-</ng-container>
+<div class="container">
+  <div class="header">
+    <span>Spa Angular Tempalte</span>
+    <div class="user-section">
+      <img [src]="account?.picture" alt="avatar" *ngIf="isAuthenticated" />
+      <span>{{ account?.name }}</span>
+      <button (click)="login()" *ngIf="!isAuthenticated">Login</button>
+      <button (click)="logout()" *ngIf="isAuthenticated">Logout</button>
+    </div>
+  </div>
+</div>
 
 <router-outlet />

@@ -1,1 +1,44 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+
+  .header {
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+    span {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 2px;
+    }
+    .user-section {
+      padding: 5px;
+      display: flex;
+      width: max-content;
+      height: 100%;
+      align-items: center;
+      span {
+        padding: 0 10px;
+      }
+      button {
+        height: 25px;
+        width: 85px;
+      }
+      img {
+        border-radius: 200px;
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+}

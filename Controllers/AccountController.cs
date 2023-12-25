@@ -11,13 +11,12 @@ namespace SpaAngular.Controllers;
 public class AccountController : ControllerBase {
     [HttpGet]
     public IActionResult Get() {
-        var userDto = new UserDto
-        {
+        var dto = new AccountDto {
             Email = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
             Name = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value,
             Picture = User.Claims.FirstOrDefault(x => x.Type == "urn:google:picture")?.Value,
             Role = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value
         };
-        return Ok(userDto);
+        return Ok(dto);
     }
 } 

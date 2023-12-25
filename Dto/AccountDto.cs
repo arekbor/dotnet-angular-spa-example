@@ -1,6 +1,6 @@
 namespace SpaAngular.Dtos;
 
-public class UserDto {
+public class AccountDto {
     public string? Name { get; set; }
     public string? Email { get; set; }
     public string? Picture { get; set; }
